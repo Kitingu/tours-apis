@@ -40,6 +40,14 @@ exports.createHotel = async (req, res, next) => {
       throw error;
     }
 
+    // 🔥 Duplicate check
+    const existingHotel = await Hotel.findOne({ where: { name, location } });
+    if (existingHotel) {
+      const error = new Error('Hotel with the same name and location already exists.');
+      error.statusCode = 409;
+      throw error;
+    }
+
     const hotel = await Hotel.create(req.body);
     res.status(201).json(hotel);
   } catch (error) {

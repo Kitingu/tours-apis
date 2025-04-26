@@ -40,6 +40,14 @@ exports.createService = async (req, res, next) => {
       throw error;
     }
 
+    // 🔥 Duplicate check
+    const existingService = await Service.findOne({ where: { name } });
+    if (existingService) {
+      const error = new Error('Service with the same name already exists.');
+      error.statusCode = 409;
+      throw error;
+    }
+
     const service = await Service.create(req.body);
     res.status(201).json(service);
   } catch (error) {

@@ -34,6 +34,14 @@ exports.createDestination = async (req, res, next) => {
       throw error;
     }
 
+    // 🔥 Duplicate check
+    const existingDestination = await Destination.findOne({ where: { name } });
+    if (existingDestination) {
+      const error = new Error('Destination with the same name already exists.');
+      error.statusCode = 409;
+      throw error;
+    }
+
     const destination = await Destination.create(req.body);
     res.status(201).json(destination);
   } catch (error) {

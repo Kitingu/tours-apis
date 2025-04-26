@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const apiKeyAuth = require('./middlewares/apiKeyAuth');
 require('dotenv').config();
 
 const destinationRoutes = require('./routes/destinations');
@@ -13,6 +14,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(apiKeyAuth); // Apply API key authentication middleware
 
 app.get('/', (req, res) => {
     res.send('Travel API is running.');

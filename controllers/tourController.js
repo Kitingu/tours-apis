@@ -40,6 +40,14 @@ exports.createTour = async (req, res, next) => {
       throw error;
     }
 
+    // 🔥 Duplicate check
+    const existingTour = await Tour.findOne({ where: { name, destination_id } });
+    if (existingTour) {
+      const error = new Error('Tour with the same name for this destination already exists.');
+      error.statusCode = 409;
+      throw error;
+    }
+
     const tour = await Tour.create(req.body);
     res.status(201).json(tour);
   } catch (error) {
